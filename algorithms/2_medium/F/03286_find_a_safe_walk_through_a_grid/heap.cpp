@@ -1,34 +1,39 @@
-const array<array<int, 2>, 4> DIRECTIONS{ array<int, 2>{1, 0}, {0, 1}, {-1, 0}, {0, -1} };
+typedef ptrdiff_t isize;
+
+constexpr isize directions[4][2] = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
 
 class Solution {
 public:
     static bool findSafeWalk(vector<vector<int>>& grid, int health) {
+        const isize rows = std::ssize(grid);
+        assert(rows > 0);
+        const isize cols = std::ssize(grid[0]);
+        assert(cols > 0 && rows <= 50 && cols <= 50 && health <= rows + cols);
+
         if (health - grid[0][0] <= 0) {
             return false;
         }
 
-        const size_t rows{ grid.size() };
-        const size_t cols{ grid[0].size() };
-        priority_queue<tuple<int, char, char>> heap;
-        vector<vector<int>> visited(rows, vector<int>(cols, false));
-        visited[0][0] = true;
-        heap.push({ health - grid[0][0], 0, 0 });
+        auto heap = priority_queue<tuple<int8_t, int8_t, int8_t>>();
+        auto visited = vector<int8_t>(rows * cols, 0);
+        visited[0] = true;
+        heap.push({ static_cast<int8_t>(health - grid[0][0]), 0, 0 });
 
         while (!heap.empty()) {
-            const auto [prev_health, i_i8, j_i8] = heap.top();
+            const auto [prev_health, i, j] = heap.top();
             heap.pop();
 
-            for (const auto& [dx, dy] : DIRECTIONS) {
-                const size_t new_i{ static_cast<size_t>(static_cast<int>(i_i8) + dx) };
-                const size_t new_j{ static_cast<size_t>(static_cast<int>(j_i8) + dy) };
+            for (const auto [dx, dy] : directions) {
+                const isize ni = i + dx;
+                const isize nj = j + dy;
 
-                if (new_i >= rows || new_j >= cols || visited[new_i][new_j]) {
+                if (ni < 0 || nj < 0 || ni >= rows || nj >= cols || visited[ni * cols + nj]) {
                     continue;
                 }
 
-                const int new_health{ prev_health - grid[new_i][new_j] };
+                const int new_health = prev_health - grid[ni][nj];
 
-                if (new_i == rows - 1 && new_j == cols - 1) {
+                if (ni == rows - 1 && nj == cols - 1) {
                     return new_health > 0;
                 }
 
@@ -36,8 +41,8 @@ public:
                     continue;
                 }
 
-                visited[new_i][new_j] = true;
-                heap.push({ new_health, static_cast<char>(new_i), static_cast<char>(new_j) });
+                visited[ni * cols + nj] = true;
+                heap.push({ static_cast<int8_t>(new_health), static_cast<int8_t>(ni), static_cast<int8_t>(nj) });
             }
         }
 
