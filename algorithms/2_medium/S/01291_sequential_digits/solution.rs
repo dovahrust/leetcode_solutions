@@ -1,27 +1,27 @@
 impl Solution {
-    pub fn sequential_digits(low: i32, high: i32) -> Vec<i32> {
+    const MAX_HI: i32 = 1_000_000_000;
+
+    pub fn sequential_digits(lo: i32, hi: i32) -> Vec<i32> {
+        assert!(lo >= 10 && lo <= hi && hi <= Self::MAX_HI);
         let mut res: Vec<i32> = Vec::new();
 
-        for i in 1..10_i32 {
-            let mut curr_num = 0_i32;
-            let mut curr_dig = i;
+        for start_dig in 1..=9_i32 {
+            let mut num = 0_i32;
 
-            while curr_num <= high {
-                if curr_num >= low {
-                    res.push(curr_num);
-                }
+            for dig in start_dig..=9_i32 {
+                num = num * 10 + dig;
 
-                if curr_dig > 9 {
+                if num > hi {
                     break;
                 }
 
-                curr_num = curr_num * 10 + curr_dig;
-                curr_dig += 1;
-            }
+                if num >= lo {
+                    res.push(num);
+                }
+            } 
         }
 
         res.sort_unstable();
-
         res
     }
 }

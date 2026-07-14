@@ -1,28 +1,28 @@
+constexpr int max_hi = 1'000'000'000;
+
 class Solution {
 public:
-    vector<int> sequentialDigits(int low, int high) {
-        vector<int> res {};
+    static vector<int> sequentialDigits(const int lo, const int hi) {
+        assert(lo >= 10 && lo <= hi && hi <= max_hi);
+        auto res = vector<int>();
 
-        for (int i {1}; i < 10; ++i) {
-            int curr_num {0};
-            int curr_dig {i};
+        for (int start_dig = 1; start_dig <= 9; start_dig += 1) {
+            int num = 0;
 
-            while (curr_num <= high) {
-                if (curr_num >= low) {
-                    res.push_back(curr_num);
-                }
+            for (int dig = start_dig; dig <= 9; dig += 1) {
+                num = num * 10 + dig;
 
-                if (curr_dig > 9) {
+                if (num > hi) {
                     break;
                 }
 
-                curr_num = curr_num * 10 + curr_dig;
-                curr_dig += 1;
+                if (num >= lo) {
+                    res.push_back(num);
+                }
             }
         }
 
         ranges::sort(res);
-
         return res;
     }
 };
