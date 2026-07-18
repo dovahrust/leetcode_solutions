@@ -1,10 +1,12 @@
 impl Solution {
-    fn gcd(a: i32, b: i32) -> i32 {
-        if b == 0 {
-            a
-        } else {
-            Self::gcd(b, a % b)
+    #[inline(always)]
+    fn gcd(mut a: i32, mut b: i32) -> i32 {
+        while b != 0 {
+            let temp = b;
+            b = a % b;
+            a = temp;
         }
+        a
     }
 
     pub fn find_gcd(nums: Vec<i32>) -> i32 {
