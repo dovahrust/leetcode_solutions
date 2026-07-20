@@ -1,28 +1,24 @@
 class Solution {
 public:
-    vector<vector<int>> shiftGrid(vector<vector<int>>& grid, int k) {
-        const size_t m{grid.size()};
-        const size_t n{grid[0].size()};
-        const size_t shift_counts{static_cast<size_t>(k) % (m * n)};
+    static vector<vector<int>> shiftGrid(const vector<vector<int>>& grid, const int k) {
+        const size_t rows = grid.size();
+        const size_t cols = grid[0].size();
+        const size_t shift_counts = static_cast<size_t>(k) % (rows * cols);
 
-        if (shift_counts == 0) {
-            return grid;
-        }
+        auto res = vector<vector<int>>(rows, vector<int>(cols, 0));
+        size_t res_i = shift_counts / cols;
+        size_t res_j = shift_counts % cols;
 
-        vector<vector<int>> res(m, vector<int>(n, 0));
-        size_t res_i{shift_counts / n};
-        size_t res_j{shift_counts % n};
-
-        for (size_t i{0}; i < m; ++i) {
-            for (size_t j{0}; j < n; ++j) {
+        for (size_t i = 0; i < rows; i += 1) {
+            for (size_t j = 0; j < cols; j += 1) {
                 res[res_i][res_j] = grid[i][j];
                 res_j += 1;
 
-                if (res_j == n) {
+                if (res_j == cols) {
                     res_j = 0;
                     res_i += 1;
 
-                    if (res_i == m) {
+                    if (res_i == rows) {
                         res_i = 0;
                     }
                 }
