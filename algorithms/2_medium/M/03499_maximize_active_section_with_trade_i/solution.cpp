@@ -1,13 +1,15 @@
+typedef ptrdiff_t isize;
+
 class Solution {
 public:
-    static int maxActiveSectionsAfterTrade(const string& s) {
-        const size_t len{ s.size() };
-        int total_ones{ 0 };
-        int prev_zeros{ 0 };
-        int curr_zeros{ 0 };
-        int max{ 0 };
+    static int maxActiveSectionsAfterTrade(const string_view s) {
+        const isize len = std::ssize(s);
+        isize total_ones = 0;
+        isize prev_zeros = 0;
+        isize curr_zeros = 0;
+        isize max = 0;
 
-        for (size_t i{ 0 }; i < len; ++i) {
+        for (isize i = 0; i < len; ++i) {
             switch (s[i]) {
                 case '0':
                     curr_zeros += 1;
@@ -27,6 +29,7 @@ public:
             }
         }
 
+        assert(max + total_ones <= numeric_limits<int>::max());
         return max + total_ones;
     }
 };
